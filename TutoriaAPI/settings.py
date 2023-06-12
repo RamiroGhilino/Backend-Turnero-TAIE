@@ -41,10 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'turnero', #Este es el nombre de mi APP, donde realmente estará el código.
-    'rest_framework', #Este es para poder usar Django REST
-    'corsheaders', #Esto es para agregar los headers de CORS después
-    'simple_history', #Este es el patrón histórico
+    'turnero', # Our app in Django terms is a module of code so you can use it for another project (TutoriaAPI in this case)
+    'rest_framework', # Django REST module
+    'corsheaders', # CORS 
+    'drf_spectacular', # OpenAPI docs
+    'simple_history', #Historic Pattern. (https://github.com/jazzband/django-simple-history)
 ]
 
 MIDDLEWARE = [
@@ -134,5 +135,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AGREGAR ACÁ CUANDO TENGAMOS UN DEPLOY DEL FRONT
 CORS_ALLOWED_ORIGINS = [
-    #"http://localhost:3000", # <--- Por ejemplo
+    #"http://localhost:3000", # <--- eg
+    #"*" # <--- If you want to allow any origin
 ]
+
+REST_FRAMEWORK = {
+  'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+}

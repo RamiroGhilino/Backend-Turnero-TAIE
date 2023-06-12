@@ -5,10 +5,14 @@ class User(models.Model):
     name = models.CharField(max_length = 50)
     last_name = models.CharField(max_length = 50)
     ucc_key = models.PositiveIntegerField()
-    mail = models.EmailField()
+    email = models.EmailField()
     academic_year = models.ForeignKey(
         "AcademicYear", on_delete = models.CASCADE
     ) 
+    
+    def __str__(self):
+        return "Clave UCC: " + str(self.ucc_key) + "| Nombre " + self.name + " " + self.last_name
+        
     class Meta:
         db_table = 'users'
 
@@ -19,6 +23,10 @@ class Role(models.Model):
     users = models.ManyToManyField(
         "User", through="User_X_Role"
     )
+    
+    def __str__(self):
+        return self.title
+    
     class Meta:
         db_table = 'roles'
     
@@ -29,6 +37,10 @@ class Career(models.Model):
     academic_unit = models.ForeignKey(
         "AcademicUnit", on_delete=models.CASCADE
     )
+    
+    def __str__(self):
+        return self.name
+            
     class Meta:
         db_table = 'careers'
 
@@ -43,6 +55,10 @@ class Area(models.Model):
     users = models.ManyToManyField(
         "User", through="User_X_Area"
     )
+    
+    def __str__(self):
+        return self.name
+    
     class Meta:
         db_table = 'areas'
     
@@ -55,6 +71,10 @@ class AcademicUnit(models.Model):
 class AcademicYear(models.Model):
     start = models.DateField()
     end = models.DateField()
+    
+    def __str__(self):
+        return "Ciclo lectivo " + str(self.start.year) +" (" + str(self.start) + " - " + str(self.end) + ")"
+    
     class Meta:
         db_table = 'academic_years'
     
@@ -93,6 +113,10 @@ class Postulation(models.Model):
     coordinator_user = models.ForeignKey(
         "User", on_delete=models.CASCADE, related_name="get_postulation_assigned"
     )
+    
+    def __str__(self):
+        return "Postulación " + str(self.id) 
+    
     class Meta:
         db_table = 'postulations'
     
