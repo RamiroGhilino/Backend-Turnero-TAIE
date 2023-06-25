@@ -1,12 +1,56 @@
 from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from .serializer import *
 from turnero.models import *
+from drf_spectacular.utils import extend_schema, inline_serializer
 
 # Create your views here.
 class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     
+    @extend_schema(
+        summary="Look up for a user by email",
+        description="""This endpoint is a POST method, but it does not create any new user.
+        It only looks up for a user by email. Reason for this decision was to not expose emails in the URL.""",
+        request=inline_serializer(
+            name= "EmailLookUpSerializer",
+            fields={
+                "email": serializers.EmailField()
+            },
+        ),
+        responses={
+            200: UserSerializer,
+            400: inline_serializer(
+                name= "400-serializer",
+                fields={
+                    "message": serializers.CharField()
+                }
+            ),
+            404: inline_serializer(
+                name= "404-serializer",
+                fields={
+                    "message": serializers.CharField()
+                    }
+                )
+        },
+    )
+    @action(detail=False, methods=['POST'], url_path='is-user')
+    def is_user(self, request):
+        if not request.data['email'].endswith('@ucc.edu.ar'):
+            content = {'message': 'Invalid email'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        try: 
+            user = User.objects.get(email=request.data['email'])
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            content = {'message': 'Not matching user with email'}
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
+
 class RoleView(viewsets.ModelViewSet):
     serializer_class = RoleSerializer
     queryset = Role.objects.all()

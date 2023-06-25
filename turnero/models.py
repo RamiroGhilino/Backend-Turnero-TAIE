@@ -1,11 +1,17 @@
 from django.db import models
+from django.core.validators import RegexValidator
 from simple_history.models import HistoricalRecords
 
 class User(models.Model):
     name = models.CharField(max_length = 50)
     last_name = models.CharField(max_length = 50)
-    ucc_key = models.PositiveIntegerField()
-    email = models.EmailField()
+    ucc_key = models.PositiveIntegerField(unique=True)
+    email = models.EmailField(unique=True,  validators=[
+                    RegexValidator(
+                        regex=r"^\d{7}@ucc.edu.ar$",
+                        message="Only email addresses with '@ucc.edu.ar' domain are allowed."
+                        )
+                    ])
     academic_year = models.ForeignKey(
         "AcademicYear", on_delete = models.CASCADE
     ) 

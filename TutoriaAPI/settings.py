@@ -142,3 +142,12 @@ CORS_ALLOWED_ORIGINS = [
 REST_FRAMEWORK = {
   'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Turnero TAIE API',
+    'DESCRIPTION': 'API correspondiente al trabajo final "Turnero TAIE", realizado por los alumnos Juan Manuel Villarreal y Ghilino Ramiro',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+    'COMPONENT_SPLIT_REQUEST': True,
+    # OTHER SETTINGS
+}
